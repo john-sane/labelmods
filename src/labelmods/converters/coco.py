@@ -373,7 +373,7 @@ class Coco():
             )
         return coco_annotation, max_line_keypoints
 
-    def convert_from_lb(self, data_row_json, ontology, panoptic = False):
+    def convert_from_lb(self, data_row_json, ontology, panoptic = False, output_path = None):
             """
             Convert Labelbox NDJSON file to COCO format.
 
@@ -652,8 +652,13 @@ class Coco():
 
             print(f"\nCOCO Conversion Complete")
 
-            with open(f"coco_{project_id}.json", "w") as f:
-                json.dump(coco_dataset, f, indent=4)
+            if output_path:
+                assert output_path.endswith('.json'), "Error: Output path does not specify a json file!"
+                with open(output_path, "w") as f:
+                    json.dump(coco_dataset, f, indent=4)
+            else:
+                with open(f"coco_{project_id}.json", "w") as f:
+                    json.dump(coco_dataset, f, indent=4)
 
     def convert_to_lb(self, coco_annotation) -> None:
 

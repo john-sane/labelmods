@@ -150,4 +150,4 @@ docs/source/_templates
 .env
 
 # Don't add github hooks yet
-.github 
+.github
