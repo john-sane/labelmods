@@ -129,19 +129,19 @@ class Coco():
         Args:
             data_row_id (str)               :     Labelbox Data Row ID for this label
             annotation (dict)               :     Annotation dictionary from label['Label']['objects'], which comes from project.export_labels()
-            category_id (str)               :     Desired category_id for the coco_annotation
+            category_id (int)               :     Desired category_id for the coco_annotation
         Returns:
             An annotation dictionary in the COCO format
         """
         coco_annotation = {
             "image_id": data_row_id,
             "bbox": [
-                str(annotation["bounding_box"]["top"]),
-                str(annotation["bounding_box"]["left"]),
-                str(annotation["bounding_box"]["height"]),
-                str(annotation["bounding_box"]["width"]),
+                float(annotation["bounding_box"]["top"]),
+                float(annotation["bounding_box"]["left"]),
+                float(annotation["bounding_box"]["height"]),
+                float(annotation["bounding_box"]["width"]),
             ],
-            "category_id": str(category_id),
+            "category_id": int(category_id),
             "id": annotation["feature_id"],
         }
         return coco_annotation
@@ -151,7 +151,7 @@ class Coco():
         Args:
             data_row_id (str)               :     Labelbox Data Row ID for this label
             annotation (dict)               :     Annotation dictionary from label['Label']['objects'], which comes from project.export_labels()
-            category_id (str)               :     Desired category_id for the coco_annotation
+            category_id (int)               :     Desired category_id for the coco_annotation
         Returns:
             An annotation dictionary in the COCO format
         """
@@ -159,15 +159,15 @@ class Coco():
         coco_line = []
         num_line_keypoints = 0
         for coordinates in line:
-            coco_line.append(str(coordinates["x"]))
-            coco_line.append(str(coordinates["y"]))
+            coco_line.append(float(coordinates["x"]))
+            coco_line.append(float(coordinates["y"]))
             coco_line.append("2")
             num_line_keypoints += 1
         coco_annotation = {
             "image_id": str(data_row_id),
             "keypoints": coco_line,
             "num_keypoints": str(num_line_keypoints),
-            "category_id": str(category_id),
+            "category_id": int(category_id),
             "id": str(annotation["feature_id"]),
         }
         return coco_annotation, num_line_keypoints
@@ -177,19 +177,19 @@ class Coco():
         Args:
             data_row_id (str)               :     Labelbox Data Row ID for this label
             annotation (dict)               :     Annotation dictionary from label['Label']['objects'], which comes from project.export_labels()
-            category_id (str)               :     Desired category_id for the coco_annotation
+            category_id (int)               :     Desired category_id for the coco_annotation
         Returns:
             An annotation dictionary in the COCO format
         """
         coco_annotation = {
             "image_id": str(data_row_id),
             "keypoints": [
-                str(annotation["point"]["x"]),
-                str(annotation["point"]["y"]),
+                float(annotation["point"]["x"]),
+                float(annotation["point"]["y"]),
                 "2",
             ],
             "num_keypoints": str(1),
-            "category_id": str(category_id),
+            "category_id": int(category_id),
             "id": str(annotation["feature_id"]),
         }
         return coco_annotation
@@ -199,7 +199,7 @@ class Coco():
         Args:
             data_row_id (str)               :     Labelbox Data Row ID for this label
             annotation (dict)               :     Annotation dictionary from label['Label']['objects'], which comes from project.export_labels()
-            category_id (str)               :     Desired category_id for the coco_annotation
+            category_id (int)               :     Desired category_id for the coco_annotation
         Returns:
             An annotation dictionary in the COCO format
         """
@@ -207,22 +207,22 @@ class Coco():
         points_as_coords = []
         for coord in annotation["polygon"]:
             points_as_coords.append([coord["x"], coord["y"]])
-            all_points.append(str(coord["x"]))
-            all_points.append(str(coord["y"]))
+            all_points.append(float(coord["x"]))
+            all_points.append(float(coord["y"]))
         polygon = Polygon(points_as_coords)
         coco_annotation = {
             "image_id": data_row_id,
             "segmentation": all_points,
             "bbox": [
-                str(polygon.bounds[0]),
-                str(polygon.bounds[1]),
-                str(polygon.bounds[2] - polygon.bounds[0]),
-                str(polygon.bounds[3] - polygon.bounds[1]),
+                float(polygon.bounds[0]),
+                float(polygon.bounds[1]),
+                float(polygon.bounds[2] - polygon.bounds[0]),
+                float(polygon.bounds[3] - polygon.bounds[1]),
             ],
-            "area": str(polygon.area),
+            "area": float(polygon.area),
             "id": str(annotation["feature_id"]),
-            "iscrowd": "0",
-            "category_id": str(category_id),
+            "iscrowd": int(0),
+            "category_id": int(category_id),
         }
         return coco_annotation
 
@@ -272,7 +272,7 @@ class Coco():
         Args:
             data_row_id (str)               :     Labelbox Data Row ID for this label
             annotation (dict)               :     Annotation dictionary from label['Label']['objects'], which comes from project.export_labels()
-            category_id (str)               :     Desired category_id for the coco_annotation
+            category_id (int)               :     Desired category_id for the coco_annotation
         Returns:
             An annotation dictionary in the COCO format
         """
@@ -290,37 +290,37 @@ class Coco():
             if len(contour) >= 6:
                 for i in range(0, len(contour), 2):
                     points_as_coords.append([contour[i], contour[i + 1]])
-                    all_points.append(str(contour[i]))
-                    all_points.append(str(contour[i + 1]))
+                    all_points.append(float(contour[i]))
+                    all_points.append(float(contour[i + 1]))
         polygon = Polygon(points_as_coords)
         if panoptic:
             r, g, b = color[0], color[1], color[2]
             coco_annotation = {
                 "id": r + (g*256) + (b*(256**2)),
-                "category_id": str(category_id),
-                "area": str(polygon.area),
+                "category_id": int(category_id),
+                "area": float(polygon.area),
                 "bbox": [
-                    str(polygon.bounds[0]),
-                    str(polygon.bounds[1]),
-                    str(polygon.bounds[2] - polygon.bounds[0]),
-                    str(polygon.bounds[3] - polygon.bounds[1]),
+                    float(polygon.bounds[0]),
+                    float(polygon.bounds[1]),
+                    float(polygon.bounds[2] - polygon.bounds[0]),
+                    float(polygon.bounds[3] - polygon.bounds[1]),
                 ],
-                "iscrowd": "0",
+                "iscrowd": int(0),
             }
         else:
             coco_annotation = {
                 "image_id": data_row_id,
                 "segmentation": all_points,
                 "bbox": [
-                    str(polygon.bounds[0]),
-                    str(polygon.bounds[1]),
-                    str(polygon.bounds[2] - polygon.bounds[0]),
-                    str(polygon.bounds[3] - polygon.bounds[1]),
+                    float(polygon.bounds[0]),
+                    float(polygon.bounds[1]),
+                    float(polygon.bounds[2] - polygon.bounds[0]),
+                    float(polygon.bounds[3] - polygon.bounds[1]),
                 ],
-                "area": str(polygon.area),
+                "area": float(polygon.area),
                 "id": str(annotation["feature_id"]),
-                "iscrowd": "0",
-                "category_id": str(category_id),
+                "iscrowd": int(0),
+                "category_id": int(category_id),
             }
         return coco_annotation
 
