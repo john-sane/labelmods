@@ -373,7 +373,7 @@ class Coco():
             )
         return coco_annotation, max_line_keypoints
 
-    def convert_from_lb(self, data_row_json, ontology, panoptic = False, output_path = None):
+    def convert_from_lb(self, data_row_json, ontology, panoptic = False, output_path = None, file_name_extension = None):
             """
             Convert Labelbox NDJSON file to COCO format.
 
@@ -422,6 +422,8 @@ class Coco():
                         file_name = data_row["global_key"]
                     else:
                         file_name = data_row["external_id"]
+                    if file_name_extension:
+                        file_name += file_name_extension
                     images.append(
                         {
                             "license": 1,
