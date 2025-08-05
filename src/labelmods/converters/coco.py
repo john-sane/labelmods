@@ -310,7 +310,7 @@ class Coco():
         else:
             coco_annotation = {
                 "image_id": data_row_id,
-                "segmentation": all_points,
+                "segmentation": [all_points],
                 "bbox": [
                     float(polygon.bounds[0]),
                     float(polygon.bounds[1]),
